@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notes</h1>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody id="notes-table-body">
+                <!-- Rows will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        async function fetchNotes() {
+            const response = await fetch('http://localhost:3000/notes');
+            if (response.ok) {
+                const notes = await response.json();
+                const tableBody = document.getElementById('notes-table-body');
+                tableBody.innerHTML = '';
+
+                notes.forEach(note => {
+                    const row = document.createElement('tr');
+
+                    const titleCell = document.createElement('td');
+                    titleCell.textContent = note.title;
+                    row.appendChild(titleCell);
+
+                    const descriptionCell = document.createElement('td');
+                    descriptionCell.textContent = note.description;
+                    row.appendChild(descriptionCell);
+
+                    const createdAtCell = document.createElement('td');
+                    createdAtCell.textContent = new Date(note.createdAt).toLocaleString();
+                    row.appendChild(createdAtCell);
+
+                    tableBody.appendChild(row);
+                });
+            } else {
+                alert('Failed to fetch notes.');
+            }
+        }
+
+        // Fetch notes on page load
+        fetchNotes();
+    </script>
+</body>
+</html>
